@@ -1,0 +1,93 @@
+import { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Switch } from 'react-native';
+
+import { mostrarAlerta } from '../utils/alerta';
+import { adicionarTopico } from '../services/TopicoService';
+
+export default function TelaNovoTopico() {
+  const [nome, setNome] = useState('');
+  const [materia, setMateria] = useState('');
+  const [concluido, setConcluido] = useState(false);
+
+  function salvar() {
+    if (!nome.trim() || !materia.trim()) {
+      mostrarAlerta(
+        'Campos obrigatórios',
+        'Preencha nome e matéria.'
+      );
+      return;
+    }
+
+    adicionarTopico({
+      nome,
+      materia,
+      concluido
+    });
+
+    mostrarAlerta(
+      'Tópico salvo!',
+      'Nome: ' + nome +
+      '\nMatéria: ' + materia +
+      '\nConcluído: ' + (concluido ? 'Sim' : 'Não')
+    );
+
+    setNome('');
+    setMateria('');
+    setConcluido(false);
+  }
+
+  return (
+    <View style={{ padding: 16, gap: 12 }}>
+      <Text>Nome do tópico</Text>
+      <TextInput
+        placeholder="Digite o tópico"
+        value={nome}
+        onChangeText={setNome}
+        style={{
+          borderWidth: 1,
+          padding: 10,
+          borderRadius: 8
+        }}
+      />
+
+      <Text>Matéria</Text>
+      <TextInput
+        placeholder="Digite a matéria"
+        value={materia}
+        onChangeText={setMateria}
+        style={{
+          borderWidth: 1,
+          padding: 10,
+          borderRadius: 8
+        }}
+      />
+
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
+      >
+        <Text>Concluído</Text>
+
+        <Switch
+          value={concluido}
+          onValueChange={setConcluido}
+        />
+      </View>
+
+      <TouchableOpacity
+        onPress={salvar}
+        style={{
+          backgroundColor: '#16a34a',
+          padding: 12,
+          borderRadius: 8,
+          alignItems: 'center'
+        }}
+      >
+        <Text style={{ color: '#fff' }}>Salvar tópico</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
